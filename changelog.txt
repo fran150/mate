@@ -1,0 +1,1 @@
+16/04/2021 - Added basic implementation of main class and scanner based on the page, I will need to refactor most of it but at least I have something to base on.

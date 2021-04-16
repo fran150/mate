@@ -1,3 +1,8 @@
+# Mate
+A prototype compiler for a language based on https://craftinginterpreters.com/
+
+Following is the language description
+
 # Literals
 Literals are sequence of characters that represents a fixed value
 
