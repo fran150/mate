@@ -1,4 +1,4 @@
-package ar.org.matelang.scanner;
+package ar.org.pachisoft.matelang.scanner;
 
 public enum TokenType {
     // Single-character tokens.

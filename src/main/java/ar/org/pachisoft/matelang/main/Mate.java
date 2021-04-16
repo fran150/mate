@@ -1,7 +1,7 @@
-package ar.org.matelang.main;
+package ar.org.pachisoft.matelang.main;
 
-import ar.org.matelang.scanner.Scanner;
-import ar.org.matelang.scanner.Token;
+import ar.org.pachisoft.matelang.scanner.Scanner;
+import ar.org.pachisoft.matelang.scanner.Token;
 
 import java.io.BufferedReader;
 import java.io.IOException;
