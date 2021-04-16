@@ -1,0 +1,335 @@
+Operators:
+----------
+operation: +, -, *, /, %, ^
+comparators: ==, !=, <=, >=, <, >
+assignment: =, +=, -=, *=, /=
+logical: &, |, !
+unary: ++, --
+ternary: ? :
+true false
+
+Types:
+------
+bool
+int, int16, int32, int64
+uint, uint16, uint32, uint64
+char
+string is alias of char[]
+float32, float64
+
+Consts:
+------
+const <Type> <identifier> = <value>
+
+Arrays:
+-------
+<type>[] <identifier> = <type>[<int size>] {
+    // Must return the value for each index
+    // keyword index returns the current index
+    // keyword length returns the array's length
+}
+
+<type>[] <identifier> = <type>[<int size>](value1, value2... value N)
+
+len(<identifier>) returns length of array
+
+Loops:
+------
+for (<init>; <condition>; <expr>) {    
+}
+
+while (<expr>) {    
+}
+
+break;
+continue;
+
+Conditional:
+------------
+if (expr) {
+} else if (expr) {
+} else {
+}
+
+Import:
+----
+// Cannot use *
+import <fully qualified struct name>
+
+Structs:
+--------
+Namespace can be specified with * as comodin on public / private statements
+
+public for <namespace>
+...
+private for <namespace>
+...
+struct <full qualified identifier> [> <parent>] {
+    Readonly for <namespace>
+    ...
+    Writeonly for <namespace>
+    ...
+    <type> <identifier>,
+    <type> <identifier>
+    ...
+}
+
+Access is public only for package by default
+
+Enumerable:
+----------
+
+// Expr must return an Enumerable
+each(<expr>) {
+    // keyword index returns the current index
+    // keyword value returns the value of the current element
+}
+
+struct Enumerable {
+    Enumerable? next;
+}
+
+Package:
+--------
+public for <namespace>
+...
+private for <namespace>
+...
+package <full qualified identifier> {
+    public for <namespace>
+    ...
+    private for <namespace>
+    ...
+    <type> <identifier>(<type> <identifier>, <type> <identifier>) {
+        return <expr>...
+    }
+}
+
+Interface:
+----------
+public for <namespace>
+...
+private for <namespace>
+...
+interface <full qualified identifier> {
+}
+
+There is no need to implement an interface, when a package is passed
+the compiler will check if it fullfills the interface
+
+Example:
+
+interface ar.com.fran.Weapon {
+    void attack()
+}
+
+interface ar.com.fran.Armor {
+    void defend()
+}
+
+package ar.com.fran.Sword {
+    void attack() {
+        print "Slash"
+    }
+}
+
+package ar.com.fran.Flower {
+    void smell() {
+        print "Sniff"
+    }
+}
+
+package ar.com.fran.Shuriken {
+    void attack() {
+        print "Throw"
+    }
+}
+
+package ar.com.fran.NoArmor {
+    void defend() {
+        print "No defense"
+    }
+}
+
+package ar.com.fran.Shield {
+    void defend() {
+        print "Clang"
+    }
+}
+
+// Selectable is which package can set a diferent implementation for the
+// interface. In this case all package from ar.com.fran namespace can select
+// a different implementation
+package ar.com.fran.Ninja
+    import ar.com.fran.Weapon selectable by ar.com.fran.* \ 
+        default ar.com.fran.Sword
+
+    import ar.com.fran.Armor selectable by ar.com.fran.* \
+        default ar.com.fran.NoArmor
+
+    void hit() {
+        Weapon.attack()
+    }
+
+    void block() {
+        Armor.defend()
+    }
+}
+
+package ar.com.fran.Main {
+    import ar.com.fran.Ninja {
+        Weapon: Sword
+    } as Ninja1
+
+    import ar.com.fran.Ninja {
+        Weapon: Shuriken
+    } as Ninja2
+
+    void run() {
+        Ninja1.hit() // Slash
+        Ninja2.hit() // Throw
+    }
+}
+
+Is
+--
+<identifier> is <Struct type>
+
+returns if the struct type is part of the hierarchy of the identifier.
+
+Empty Value:
+------------
+
+Appending an struct type name with ? is an empty type
+An empty type is always the parent from the given type but has no properties
+It can be used on types that can have no value, to actually get the value 
+requires casting.
+
+Example:
+
+struct People {
+    string name;
+    int age;
+}
+
+// People inherits from People? so this is valid
+People? me;
+
+me is People? // true
+me is People // false
+
+me = People {
+    name: "Fran",
+    age: 38
+}
+
+me is People? // true
+me is People // true
+
+// Exception because People? doesnt have those fields
+me.name = "Pat"
+me.age = 39
+
+// Works
+if (me is Person) {
+    People person = me as Person
+    person.name = "Pat"
+    person.age = 39
+}
+
+// Shortcut to the above
+if (me is Person into person) {
+    person.name = "Pat"
+    person.age = 39
+}
+
+Lambda
+------
+
+package ar.fran150.Iterator {
+    void each(float32[] list, lambda bool fn(float32, int), \
+        lambda void finish()) {
+        for (int i = 0; i < len(list); i++) {
+            if (!fn(list[i], i)) {
+                break
+            }
+        }
+
+        finish()
+    }
+}
+
+...
+...
+    float64 sum = 0
+
+    Iterator.each(list, (value, index) => {
+        if (value > 200) {
+            return false
+        }
+
+        if (index > 100000) {
+            return false
+        }
+
+        sum += value
+    }, () => {
+        print "bye"
+    })
+
+Templates
+---------
+
+// Parameters must be an AST type
+template ar.com.fran.List(Type type)
+
+file NodeOf<type> {
+    struct NodeOf<type> > Enumerable {
+        <type> value
+    }
+}
+
+file ListOf<type> {
+    package ar.fran150.ListOf<type> {
+        Enumerable? init(<type>[] values) {
+            Enumerable? root = Enumerable? {}
+            Enumerable? prev = Enumerable? {}
+
+            for (int i = 0; i < len(values); i++) {
+                NodeOf<TYPE> node = {
+                    value: values[i],
+                    next: Enumerable? {                        
+                    }
+                }
+
+                if (!(root is Enumerable)) {
+                    root = node
+                }
+
+                if (prev is Enumerable) {
+                    prev.next = node
+                }
+
+                prev = node
+            }
+
+            return root
+        }
+    }
+}
+
+package ar.com.fran.Test {
+    import ar.com.fran.List<int> as ListOfInt
+    import ar.com.fran.List<string> as ListOfString
+
+    void run() {
+        int[] values = int[5] {
+            return index
+        }
+
+        String[] vocals = String[5]("a","e","i","o","u")
+
+        Enumerable? integers = ListOfInt.init(values)
+        Enumerable? letters = ListOfString.init(vocals)
+    }
+}
