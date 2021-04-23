@@ -8,46 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static ar.org.pachisoft.matelang.scanner.TokenType.AND;
-import static ar.org.pachisoft.matelang.scanner.TokenType.BANG;
-import static ar.org.pachisoft.matelang.scanner.TokenType.BANG_EQUAL;
-import static ar.org.pachisoft.matelang.scanner.TokenType.CLASS;
-import static ar.org.pachisoft.matelang.scanner.TokenType.COMMA;
-import static ar.org.pachisoft.matelang.scanner.TokenType.DOT;
-import static ar.org.pachisoft.matelang.scanner.TokenType.ELSE;
-import static ar.org.pachisoft.matelang.scanner.TokenType.EOF;
-import static ar.org.pachisoft.matelang.scanner.TokenType.EQUAL;
-import static ar.org.pachisoft.matelang.scanner.TokenType.EQUAL_EQUAL;
-import static ar.org.pachisoft.matelang.scanner.TokenType.FALSE;
-import static ar.org.pachisoft.matelang.scanner.TokenType.FOR;
-import static ar.org.pachisoft.matelang.scanner.TokenType.FUN;
-import static ar.org.pachisoft.matelang.scanner.TokenType.GREATER;
-import static ar.org.pachisoft.matelang.scanner.TokenType.GREATER_EQUAL;
-import static ar.org.pachisoft.matelang.scanner.TokenType.IDENTIFIER;
-import static ar.org.pachisoft.matelang.scanner.TokenType.IF;
-import static ar.org.pachisoft.matelang.scanner.TokenType.LEFT_BRACE;
-import static ar.org.pachisoft.matelang.scanner.TokenType.LEFT_PAREN;
-import static ar.org.pachisoft.matelang.scanner.TokenType.LESS;
-import static ar.org.pachisoft.matelang.scanner.TokenType.LESS_EQUAL;
-import static ar.org.pachisoft.matelang.scanner.TokenType.MINUS;
-import static ar.org.pachisoft.matelang.scanner.TokenType.NIL;
-import static ar.org.pachisoft.matelang.scanner.TokenType.NUMBER;
-import static ar.org.pachisoft.matelang.scanner.TokenType.OR;
-import static ar.org.pachisoft.matelang.scanner.TokenType.PLUS;
-import static ar.org.pachisoft.matelang.scanner.TokenType.PRINT;
-import static ar.org.pachisoft.matelang.scanner.TokenType.RETURN;
-import static ar.org.pachisoft.matelang.scanner.TokenType.RIGHT_BRACE;
-import static ar.org.pachisoft.matelang.scanner.TokenType.RIGHT_PAREN;
-import static ar.org.pachisoft.matelang.scanner.TokenType.SEMICOLON;
-import static ar.org.pachisoft.matelang.scanner.TokenType.SLASH;
-import static ar.org.pachisoft.matelang.scanner.TokenType.STAR;
-import static ar.org.pachisoft.matelang.scanner.TokenType.STRING;
-import static ar.org.pachisoft.matelang.scanner.TokenType.SUPER;
-import static ar.org.pachisoft.matelang.scanner.TokenType.THIS;
-import static ar.org.pachisoft.matelang.scanner.TokenType.TRUE;
-import static ar.org.pachisoft.matelang.scanner.TokenType.VAR;
-import static ar.org.pachisoft.matelang.scanner.TokenType.WHILE;
-
 @RequiredArgsConstructor
 public class Scanner {
     private final String source;
@@ -86,7 +46,7 @@ public class Scanner {
             scanToken();
         }
 
-        tokens.add(new Token(EOF, "", null, line));
+        //tokens.add(new Token(EOF, "", null, line));
         return tokens;
     }
 
@@ -141,7 +101,7 @@ public class Scanner {
                 } else if (isAlpha(c)) {
                     identifier();
                 } else {
-                    Mate.error(line, "Unexpected character.");
+                    //Mate.error(line, "Unexpected character.");
                 }
 
                 break;
@@ -185,7 +145,7 @@ public class Scanner {
         }
 
         if (isAtEnd()) {
-            Mate.error(line, "Unterminated string.");
+            //Mate.error(line, "Unterminated string.");
             return;
         }
 

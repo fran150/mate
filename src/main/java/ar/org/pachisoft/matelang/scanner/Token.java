@@ -9,6 +9,8 @@ public class Token {
     private final TokenType type;
     private final String lexeme;
     private final Object literal;
+    private final String file;
+    private final int column;
     private final int line;
 
     public String toString() {

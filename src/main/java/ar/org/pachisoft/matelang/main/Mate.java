@@ -17,19 +17,21 @@ public class Mate {
 
     static boolean hadError = false;
 
+    private void exitAndShowUsage() {
+        System.out.println("Usage: mate [script]");
+        System.exit(EX_USAGE);
+    }
+
     public static void main(String[] args) throws IOException {
         if (args.length > 1) {
-            System.out.println("Usage: mate [script]");
-            System.exit(EX_USAGE);
-        } else if (args.length == 1) {
-            runFile(args[0]);
+            runClassPath();
         } else {
             System.out.println("Welcome to mate CLI!!");
             runPrompt();
         }
     }
     
-    private static void runFile(String path) throws IOException {
+    private static void runClassPath(String path) throws IOException {
         byte[] bytes = Files.readAllBytes(Paths.get(path));
         run(new String(bytes, Charset.defaultCharset()));
 
@@ -57,16 +59,5 @@ public class Mate {
         for (Token token : tokens) {
             System.out.println(token);
         }
-    }
-
-    public static void error(int line, String message) {
-        report(line, "", message);
-    }
-
-    private static void report(int line, String where,
-                               String message) {
-        System.err.println(
-                "[line " + line + "] Error" + where + ": " + message);
-        hadError = true;
     }
 }
