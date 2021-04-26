@@ -1,20 +1,28 @@
 package ar.org.pachisoft.matelang.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * Reads and parses the module configuration file.
+ */
 public class ModuleConfigReader {
-    private final String moduleConfigPath;
-
-    public ModuleConfigReader(ParametersConfig parametersConfig) {
-        this.moduleConfigPath = parametersConfig.getModuleConfigPath();
-    }
-
-    public ModuleConfig read() throws IOException {
+    /**
+     * Read and parse the module configuration file.
+     *
+     * @param moduleConfigFile Module configuration file.
+     * @return Parsed module configuration file.
+     * @throws IOException Thrown when it was not possible to read
+     *                     the specified module configuration path.
+     */
+    public ModuleConfig read(File moduleConfigFile) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        File moduleConfigFile = new File(moduleConfigPath);
-        return mapper.readValue(moduleConfigFile, ModuleConfig.class);
+
+        if (moduleConfigFile.exists()) {
+            return mapper.readValue(moduleConfigFile, ModuleConfig.class);
+        } else {
+            return ModuleConfig.builder().build();
+        }
     }
 }

@@ -6,6 +6,7 @@ package ar.org.pachisoft.matelang.config;
 public class Environment {
     /**
      * Returns true if the console supports ANSI escape codes.
+     *
      * @return True if the console allows to show colors.
      */
     public boolean consoleSupportsColors() {

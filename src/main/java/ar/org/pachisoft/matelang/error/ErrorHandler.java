@@ -4,11 +4,10 @@ import ar.org.pachisoft.matelang.config.Config;
 import ar.org.pachisoft.matelang.scanner.ParsingPointer;
 import ar.org.pachisoft.matelang.utils.ConsoleColors;
 import ar.org.pachisoft.matelang.utils.ConsoleUtils;
-import lombok.AllArgsConstructor;
-
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
 
 /**
  * Handles error presentation for both compiler and runtime errors.
@@ -78,7 +77,7 @@ public class ErrorHandler {
         consoleUtils.changeOutputColor(sb, ConsoleColors.RED);
         appendErrorMessage(sb, message);
 
-        if (config) {
+        if (config.showErrorContext()) {
             appendErrorLocation(sb, pointer, message);
         }
 

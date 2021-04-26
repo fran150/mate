@@ -43,7 +43,7 @@ class ErrorHandlerTest {
         pointerInfoMock.setColumn(10);
 
         when(environmentMock.consoleSupportsColors()).thenReturn(true);
-        when(configMock.isShowErrorContext()).thenReturn(true);
+        when(configMock.showErrorContext()).thenReturn(true);
 
         consoleUtils = new ConsoleUtils(environmentMock);
         errorHandler = new ErrorHandler(consoleUtils, configMock);

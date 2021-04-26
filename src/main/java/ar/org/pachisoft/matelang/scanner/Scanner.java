@@ -21,6 +21,7 @@ public class Scanner {
 
     static {
         keywords = new HashMap<>();
+        /*
         keywords.put("and",    AND);
         keywords.put("class",  CLASS);
         keywords.put("else",   ELSE);
@@ -37,6 +38,7 @@ public class Scanner {
         keywords.put("true",   TRUE);
         keywords.put("var",    VAR);
         keywords.put("while",  WHILE);
+         */
     }
 
     public List<Token> scanTokens() {
@@ -52,60 +54,60 @@ public class Scanner {
 
     private void scanToken() {
         char c = advance();
-        switch (c) {
-            case '(': addToken(LEFT_PAREN); break;
-            case ')': addToken(RIGHT_PAREN); break;
-            case '{': addToken(LEFT_BRACE); break;
-            case '}': addToken(RIGHT_BRACE); break;
-            case ',': addToken(COMMA); break;
-            case '.': addToken(DOT); break;
-            case '-': addToken(MINUS); break;
-            case '+': addToken(PLUS); break;
-            case ';': addToken(SEMICOLON); break;
-            case '*': addToken(STAR); break;
-            case '!':
-                addToken(match('=') ? BANG_EQUAL : BANG);
-                break;
-            case '=':
-                addToken(match('=') ? EQUAL_EQUAL : EQUAL);
-                break;
-            case '<':
-                addToken(match('=') ? LESS_EQUAL : LESS);
-                break;
-            case '>':
-                addToken(match('=') ? GREATER_EQUAL : GREATER);
-                break;
-            case '/':
-                if (match('/')) {
-                    // A comment goes until the end of the line.
-                    while (peek() != '\n' && !isAtEnd()) advance();
-                } else {
-                    addToken(SLASH);
-                }
-                break;
-            case ' ':
-            case '\r':
-            case '\t':
-                // Ignore whitespace.
-                break;
-
-            case '\n':
-                line++;
-                break;
-
-            case '"': string(); break;
-
-            default:
-                if (isDigit(c)) {
-                    number();
-                } else if (isAlpha(c)) {
-                    identifier();
-                } else {
-                    //Mate.error(line, "Unexpected character.");
-                }
-
-                break;
-        }
+//        switch (c) {
+//            case '(': addToken(LEFT_PAREN); break;
+//            case ')': addToken(RIGHT_PAREN); break;
+//            case '{': addToken(LEFT_BRACE); break;
+//            case '}': addToken(RIGHT_BRACE); break;
+//            case ',': addToken(COMMA); break;
+//            case '.': addToken(DOT); break;
+//            case '-': addToken(MINUS); break;
+//            case '+': addToken(PLUS); break;
+//            case ';': addToken(SEMICOLON); break;
+//            case '*': addToken(STAR); break;
+//            case '!':
+//                addToken(match('=') ? BANG_EQUAL : BANG);
+//                break;
+//            case '=':
+//                addToken(match('=') ? EQUAL_EQUAL : EQUAL);
+//                break;
+//            case '<':
+//                addToken(match('=') ? LESS_EQUAL : LESS);
+//                break;
+//            case '>':
+//                addToken(match('=') ? GREATER_EQUAL : GREATER);
+//                break;
+//            case '/':
+//                if (match('/')) {
+//                    // A comment goes until the end of the line.
+//                    while (peek() != '\n' && !isAtEnd()) advance();
+//                } else {
+//                    addToken(SLASH);
+//                }
+//                break;
+//            case ' ':
+//            case '\r':
+//            case '\t':
+//                // Ignore whitespace.
+//                break;
+//
+//            case '\n':
+//                line++;
+//                break;
+//
+//            case '"': string(); break;
+//
+//            default:
+//                if (isDigit(c)) {
+//                    number();
+//                } else if (isAlpha(c)) {
+//                    identifier();
+//                } else {
+//                    //Mate.error(line, "Unexpected character.");
+//                }
+//
+//                break;
+//        }
     }
 
     private boolean isAtEnd() {
@@ -122,7 +124,7 @@ public class Scanner {
 
     private void addToken(TokenType type, Object literal) {
         String text = source.substring(start, current);
-        tokens.add(new Token(type, text, literal, line));
+        //tokens.add(new Token(type, text, literal, line));
     }
 
     private boolean match(char expected) {
@@ -154,7 +156,7 @@ public class Scanner {
 
         // Trim the surrounding quotes.
         String value = source.substring(start + 1, current - 1);
-        addToken(STRING, value);
+        //addToken(STRING, value);
     }
 
     private boolean isDigit(char c) {
@@ -172,8 +174,8 @@ public class Scanner {
             while (isDigit(peek())) advance();
         }
 
-        addToken(NUMBER,
-                Double.parseDouble(source.substring(start, current)));
+//        addToken(NUMBER,
+//                Double.parseDouble(source.substring(start, current)));
     }
 
     private char peekNext() {
@@ -186,7 +188,7 @@ public class Scanner {
 
         String text = source.substring(start, current);
         TokenType type = keywords.get(text);
-        if (type == null) type = IDENTIFIER;
+//        if (type == null) type = IDENTIFIER;
         addToken(type);
     }
 

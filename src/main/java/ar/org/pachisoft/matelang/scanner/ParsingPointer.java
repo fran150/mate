@@ -11,12 +11,11 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Data
-@Builder
 public class ParsingPointer {
     private final String source;
     private final String fileName;
-    private final String[] preContext = new String[Config.ERROR_CONTEXT_LINES];
-    private final String[] postContext = new String[Config.ERROR_CONTEXT_LINES];
+    private final String[] preContext = new String[3];
+    private final String[] postContext = new String[3];
     private String currentLine;
 
     private final List<Token> tokens = new ArrayList<>();
