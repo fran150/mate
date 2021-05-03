@@ -1,7 +1,7 @@
 package ar.org.pachisoft.matelang.error;
 
 import ar.org.pachisoft.matelang.config.Config;
-import ar.org.pachisoft.matelang.config.Environment;
+import ar.org.pachisoft.matelang.utils.Environment;
 import ar.org.pachisoft.matelang.scanner.ParsingPointer;
 import ar.org.pachisoft.matelang.utils.ConsoleUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,48 +10,46 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.io.File;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ErrorHandlerTest {
     private ErrorHandler errorHandler;
-    private ParsingPointer pointerInfoMock;
+    private ParsingPointer parsingPointer;
     private ConsoleUtils consoleUtils;
 
     @Mock
     private Environment environmentMock;
-    @Mock
-    private Config configMock;
 
     @BeforeEach
     public void setup() {
-        pointerInfoMock = new ParsingPointer("", "Pilots.mate");
+        String source = "Person pilot = Person {\n" +
+                        "    name: \"Pete\",\n" +
+                        "    surname: \"Mitchell\",\n" +
+                        "    alias: \"Maverick\",\n" +
+                        "}";
 
-        String[] pre = pointerInfoMock.getPreContext();
-        String[] post = pointerInfoMock.getPostContext();
+        Config config = Config.builder().build();
 
-        pre[0] = "Person pilot = Person {";
-        pre[1] = "    name: \"Pete\",";
-        pre[2] = "    surname: \"Mitchell\",";
-        pointerInfoMock.setCurrentLine("    age: \"28\",");
-        post[0] = "    alias: \"Maverick\",";
-        post[1] = "}";
-        post[2] = null;
+        parsingPointer = ParsingPointer.builder()
+                .file(new File("test.mate"))
+                .source(source)
+                .build();
 
-        pointerInfoMock.setLine(3);
-        pointerInfoMock.setColumn(10);
+        parsingPointer.advance(35);
 
         when(environmentMock.consoleSupportsColors()).thenReturn(true);
-        when(configMock.showErrorContext()).thenReturn(true);
 
         consoleUtils = new ConsoleUtils(environmentMock);
-        errorHandler = new ErrorHandler(consoleUtils, configMock);
+        errorHandler = new ErrorHandler(consoleUtils, config);
     }
 
     @Test
     public void showError_showsTheExpectedErrorFormat() {
-        String error = errorHandler.getErrorMessage(pointerInfoMock, "Type Mismatch");
+        String error = errorHandler.getErrorMessage(parsingPointer, "Test Error");
         System.out.println(error);
         assertTrue(true);
     }

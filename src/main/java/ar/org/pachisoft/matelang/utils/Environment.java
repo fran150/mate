@@ -1,4 +1,4 @@
-package ar.org.pachisoft.matelang.config;
+package ar.org.pachisoft.matelang.utils;
 
 /**
  * Returns data about the environment in which the compiler is running.

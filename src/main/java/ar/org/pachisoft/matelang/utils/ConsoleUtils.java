@@ -1,6 +1,5 @@
 package ar.org.pachisoft.matelang.utils;
 
-import ar.org.pachisoft.matelang.config.Environment;
 import lombok.AllArgsConstructor;
 
 /**
@@ -8,7 +7,7 @@ import lombok.AllArgsConstructor;
  */
 @AllArgsConstructor
 public class ConsoleUtils {
-    private Environment environment;
+    private final Environment environment;
 
     /**
      * Allows to change color being appended to a string builder.

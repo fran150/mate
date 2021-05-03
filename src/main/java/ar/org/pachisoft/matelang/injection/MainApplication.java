@@ -8,7 +8,8 @@ import dagger.Component;
  */
 @Component(modules = {
     ConfigModule.class,
-    MainModule.class
+    MateCompilerModule.class,
+    ScannerModule.class
 })
 public interface MainApplication {
     MateCompiler compiler();

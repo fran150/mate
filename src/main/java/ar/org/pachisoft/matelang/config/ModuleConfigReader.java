@@ -1,5 +1,6 @@
 package ar.org.pachisoft.matelang.config;
 
+import ar.org.pachisoft.matelang.error.ErrorHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
@@ -13,16 +14,19 @@ public class ModuleConfigReader {
      *
      * @param moduleConfigFile Module configuration file.
      * @return Parsed module configuration file.
-     * @throws IOException Thrown when it was not possible to read
-     *                     the specified module configuration path.
      */
-    public ModuleConfig read(File moduleConfigFile) throws IOException {
+    public ModuleConfig read(File moduleConfigFile) {
         ObjectMapper mapper = new ObjectMapper();
 
         if (moduleConfigFile.exists()) {
-            return mapper.readValue(moduleConfigFile, ModuleConfig.class);
+            try {
+                return mapper.readValue(moduleConfigFile, ModuleConfig.class);
+            } catch (IOException ex) {
+                ErrorHandler.showModuleConfigFormatErrorAndExit(moduleConfigFile, ex.getMessage());
+                return null;
+            }
         } else {
-            return ModuleConfig.builder().build();
+            return new ModuleConfig();
         }
     }
 }

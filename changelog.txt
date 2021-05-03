@@ -1,1 +1,35 @@
-16/04/2021 - Added basic implementation of main class and scanner based on the page, I will need to refactor most of it but at least I have something to base on.
+16/04/2021
+Added basic implementation of main class and scanner based on the page, I will need to
+refactor most of it but at least I have something to base on.
+
+25/04/2021
+Refactor mainly configuration and error classes
+Added lombok for generating
+Added gradle to handle the build, dagger for injection, apache commons cli and io
+Added junit and mockito for testing
+Added jackson for json parsing
+
+27/04/2021
+Added build path iterator
+Some work on ParsingPointer, Scanner and Token classes
+
+28/04/2021
+Added dagger wiring for several classes
+Ignore build paths whose directories does not exists
+Move logic of CLI usage error detection to parser and showing to the error handler
+Move logic of error parsing the module config to the parser and showing the error to the error handler
+Use factory for configuration
+
+01/05/2021
+Fix the context lines getter functions on the parsing pointer
+Validate that at least one build path exists
+
+02/05/2021
+Added single char tokenizers, use them to process files
+Added ignorable token type and skip adding them as tokens
+Added peek capability to the parsing pointer
+Added tokenizer for single or dual token types
+
+03/05/2021
+Added tokenizer for inline and multiline comments (for now we don't ignore them)
+Added tokenizer for slash (division)

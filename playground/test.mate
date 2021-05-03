@@ -1,0 +1,12 @@
+int name = (10 + 10)
+string text = "fran"
+
+// This is an inline comment
+if (name == 20) {
+    /* This is a multiline comment
+       to tell that the next line should print "is 20" */
+    print "is 20"
+
+    int result = name / 10
+    result /= 2
+}

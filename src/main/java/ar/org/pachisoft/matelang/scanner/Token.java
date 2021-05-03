@@ -1,19 +1,33 @@
 package ar.org.pachisoft.matelang.scanner;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Value;
 
-@Data
-@Builder
+import java.io.File;
+
+@Value
 public class Token {
-    private final TokenType type;
-    private final String lexeme;
-    private final Object literal;
-    private final String file;
-    private final int column;
-    private final int line;
+    TokenType type;
+    String lexeme;
+    Object literal;
+
+    File file;
+    int column;
+    int line;
+
+    @Builder
+    public Token(ParsingPointer pointer, TokenType type, String lexeme, Object literal) {
+        this.type = type;
+        this.lexeme = lexeme;
+        this.literal = literal;
+
+        this.file = pointer.getFile();
+        this.line = pointer.getLine();
+        this.column = pointer.getColumn();
+    }
 
     public String toString() {
-        return type + " " + lexeme + " " + literal;
+        return type + " " + lexeme + " " + literal + "\n";
     }
 }

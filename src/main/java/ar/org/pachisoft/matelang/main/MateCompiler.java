@@ -1,39 +1,36 @@
 package ar.org.pachisoft.matelang.main;
 
-import ar.org.pachisoft.matelang.config.Config;
-import java.nio.file.Path;
+import ar.org.pachisoft.matelang.scanner.BuildPathIterator;
+import ar.org.pachisoft.matelang.scanner.Scanner;
+import ar.org.pachisoft.matelang.scanner.Token;
 import lombok.AllArgsConstructor;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Main class for the mate compiler.
  */
 @AllArgsConstructor
 public class MateCompiler {
-    private final Config config;
+    private final BuildPathIterator buildPathIterator;
+    private final Scanner scanner;
 
     /**
      * Apply a first compilation pass.
      */
     public void firstPass() {
-        System.out.println(config.getModuleConfigFile().getAbsolutePath());
+        List<Token> tokens = new ArrayList<>();
 
-        for (Path buildPath : config.getBuildPaths()) {
-            System.out.println(buildPath.toAbsolutePath());
+        try {
+            buildPathIterator.iterate((file, source) -> {
+                scanner.scanTokens(file, source, tokens);
+            });
+
+            System.out.println(tokens);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        //            File buildPathDir = new File(buildPath);
-        //
-        //            Collection<File> files = FileUtils.listFiles(
-        //                    buildPathDir,
-        //                    new String[] { "mate" },
-        //                    true
-        //            );
-        //
-        //            for (File source : files) {
-        //                byte[] bytes = FileUtils.readFileToByteArray(source);
-        //                run(new String(bytes, Charset.defaultCharset()));
-        //            }
-        //        }
-        //
-        //        if (hadError) System.exit(65);
     }
 }

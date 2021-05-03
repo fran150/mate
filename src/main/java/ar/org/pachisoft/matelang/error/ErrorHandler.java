@@ -4,18 +4,22 @@ import ar.org.pachisoft.matelang.config.Config;
 import ar.org.pachisoft.matelang.scanner.ParsingPointer;
 import ar.org.pachisoft.matelang.utils.ConsoleColors;
 import ar.org.pachisoft.matelang.utils.ConsoleUtils;
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
+
+import java.io.File;
 
 /**
  * Handles error presentation for both compiler and runtime errors.
  */
 @AllArgsConstructor
 public class ErrorHandler {
-    private ConsoleUtils consoleUtils;
-    private Config config;
+    private static final int EX_USAGE = 64;
+    private static final int EX_CONFIG = 78;
+
+    private final ConsoleUtils consoleUtils;
+    private final Config config;
 
     /**
      * Shows the specified error on the standard error output.
@@ -28,19 +32,12 @@ public class ErrorHandler {
     }
 
     private void appendMessageHeader(StringBuilder sb, ParsingPointer pointer) {
-        if (pointer.getFileName() != null) {
+        if (pointer.getFile() != null) {
             sb.append(String.format("Parser error on line number %d of file %s:\n",
-                    pointer.getLine() + 1, pointer.getFileName()));
+                    pointer.getLine() + 1, pointer.getFile().getName()));
         } else {
             sb.append("Error parsing statement:\n\n");
         }
-    }
-
-    private void appendMessageContext(StringBuilder sb, String[] context) {
-        sb.append(Arrays.stream(context)
-                .filter(Objects::nonNull)
-                .collect(Collectors.joining("\n")));
-        sb.append("\n");
     }
 
     private void appendErrorLine(StringBuilder sb, ParsingPointer pointer) {
@@ -63,9 +60,11 @@ public class ErrorHandler {
         sb.append("Context:\n");
         consoleUtils.changeOutputColor(sb, ConsoleColors.RESET);
 
-        appendMessageContext(sb, pointer.getPreContext());
+        int contextErrorLines = config.getErrorContextLines();
+
+        sb.append(pointer.getPreContext(contextErrorLines));
         appendErrorLine(sb, pointer);
-        appendMessageContext(sb, pointer.getPostContext());
+        sb.append(pointer.getPostContext(contextErrorLines));
     }
 
     String getErrorMessage(ParsingPointer pointer, String message) {
@@ -84,5 +83,33 @@ public class ErrorHandler {
         consoleUtils.changeOutputColor(sb, ConsoleColors.RESET);
 
         return sb.toString();
+    }
+
+    /**
+     * Shows the command line arguments help.
+     */
+    public static void showCLIUsageErrorAndExit(String error, Options cliOptions) {
+        HelpFormatter helpFormatter = new HelpFormatter();
+        System.out.println(error);
+        helpFormatter.printHelp("mate [options] [source]", cliOptions);
+
+        System.exit(EX_USAGE);
+    }
+
+    public static void showConfigErrorAndExit(String error) {
+        System.out.print(ConsoleColors.RED);
+        System.out.println(error);
+        System.out.print(ConsoleColors.RESET);
+
+        System.exit(EX_CONFIG);
+    }
+
+    public static void showModuleConfigFormatErrorAndExit(File moduleConfigFile, String error) {
+        System.out.printf("Error while reading module config file: %s\n\n",
+                moduleConfigFile);
+
+        System.out.printf("Error description: %s\n", error);
+
+        System.exit(EX_CONFIG);
     }
 }

@@ -1,13 +1,13 @@
 package ar.org.pachisoft.matelang.config;
 
-import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-@Builder
+@NoArgsConstructor
 class ModuleConfig {
-    private String name;
-    private String version;
-    private String author;
-    private String[] buildPaths;
+    String name;
+    String version;
+    String author;
+    String[] buildPaths;
 }
