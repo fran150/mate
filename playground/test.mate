@@ -7,6 +7,12 @@ if (name == 20) {
        to tell that the next line should print "is 20" */
     print "is 20"
 
+    string text = "this \t is a test \n text"
+
+    int bin = 0b1010
+    int oct = 0o12
+    int hex = 0xFF
+
     int result = name / 10
     result /= 2
 }

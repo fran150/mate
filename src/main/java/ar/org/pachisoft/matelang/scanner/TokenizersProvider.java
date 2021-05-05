@@ -3,8 +3,11 @@ package ar.org.pachisoft.matelang.scanner;
 import ar.org.pachisoft.matelang.scanner.tokenizer.DualCharTokenizer;
 import ar.org.pachisoft.matelang.scanner.tokenizer.InlineCommentTokenizer;
 import ar.org.pachisoft.matelang.scanner.tokenizer.MultilineCommentTokenizer;
+import ar.org.pachisoft.matelang.scanner.tokenizer.NonDecimalLiteralTokenizer;
 import ar.org.pachisoft.matelang.scanner.tokenizer.SingleCharTokenizer;
+import ar.org.pachisoft.matelang.scanner.tokenizer.StringLiteralTokenizer;
 import ar.org.pachisoft.matelang.scanner.tokenizer.Tokenizer;
+import ar.org.pachisoft.matelang.utils.NumericSystemsParameters;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +45,25 @@ public class TokenizersProvider {
 
         // Order matters here, we need first to discard that the / was not a comment
         tokenizers.add(new DualCharTokenizer('/', '=', TokenType.SLASH, TokenType.SLASH_EQUAL));
+
+        // Literals
+        tokenizers.add(new StringLiteralTokenizer());
+
+        tokenizers.add(NonDecimalLiteralTokenizer.builder()
+                .numericBase(NumericSystemsParameters.BINARY_NUMERIC_BASE)
+                .symbolValues(NumericSystemsParameters.BINARY_SYMBOLS)
+                .expectedStart(NumericSystemsParameters.BINARY_START)
+                .build());
+        tokenizers.add(NonDecimalLiteralTokenizer.builder()
+                .numericBase(NumericSystemsParameters.OCTAL_NUMERIC_BASE)
+                .symbolValues(NumericSystemsParameters.OCTAL_SYMBOLS)
+                .expectedStart(NumericSystemsParameters.OCTAL_START)
+                .build());
+        tokenizers.add(NonDecimalLiteralTokenizer.builder()
+                .numericBase(NumericSystemsParameters.HEX_NUMERIC_BASE)
+                .symbolValues(NumericSystemsParameters.HEX_SYMBOLS)
+                .expectedStart(NumericSystemsParameters.HEX_START)
+                .build());
 
         return tokenizers;
     }

@@ -30,6 +30,10 @@ Added ignorable token type and skip adding them as tokens
 Added peek capability to the parsing pointer
 Added tokenizer for single or dual token types
 
+05/05/2021
+Added string literals tokenizer
+Added binary, octal and hexadecimal literals tokenizers
+
 03/05/2021
 Added tokenizer for inline and multiline comments (for now we don't ignore them)
 Added tokenizer for slash (division)

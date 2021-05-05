@@ -19,7 +19,7 @@ public enum TokenType {
     INLINE_COMMENT, MULTILINE_COMMENT,
 
     // Literals.
-    IDENTIFIER, STRING, NUMBER,
+    IDENTIFIER, STRING, INTEGER, DECIMAL,
 
     // Keywords.
     AND, CLASS, ELSE, FALSE, FUN, FOR, IF, NIL, OR,
