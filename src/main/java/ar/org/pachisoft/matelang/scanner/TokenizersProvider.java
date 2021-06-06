@@ -1,12 +1,15 @@
 package ar.org.pachisoft.matelang.scanner;
 
+import ar.org.pachisoft.matelang.scanner.tokenizer.DecimalLiteralTokenizer;
 import ar.org.pachisoft.matelang.scanner.tokenizer.DualCharTokenizer;
+import ar.org.pachisoft.matelang.scanner.tokenizer.IdentifiersTokenizer;
 import ar.org.pachisoft.matelang.scanner.tokenizer.InlineCommentTokenizer;
 import ar.org.pachisoft.matelang.scanner.tokenizer.MultilineCommentTokenizer;
 import ar.org.pachisoft.matelang.scanner.tokenizer.NonDecimalLiteralTokenizer;
 import ar.org.pachisoft.matelang.scanner.tokenizer.SingleCharTokenizer;
 import ar.org.pachisoft.matelang.scanner.tokenizer.StringLiteralTokenizer;
 import ar.org.pachisoft.matelang.scanner.tokenizer.Tokenizer;
+import ar.org.pachisoft.matelang.utils.Constants;
 import ar.org.pachisoft.matelang.utils.NumericSystemsParameters;
 
 import java.util.ArrayList;
@@ -16,7 +19,6 @@ public class TokenizersProvider {
     public static List<Tokenizer> getTokenizers() {
         List<Tokenizer> tokenizers = new ArrayList<>();
 
-        // Ignorable tokens
         tokenizers.add(new SingleCharTokenizer(' ', TokenType.IGNORABLE));
         tokenizers.add(new SingleCharTokenizer('\t', TokenType.IGNORABLE));
         tokenizers.add(new SingleCharTokenizer('\r', TokenType.IGNORABLE));
@@ -27,6 +29,8 @@ public class TokenizersProvider {
         tokenizers.add(new SingleCharTokenizer(')', TokenType.RIGHT_PAREN));
         tokenizers.add(new SingleCharTokenizer('{', TokenType.LEFT_BRACE));
         tokenizers.add(new SingleCharTokenizer('}', TokenType.RIGHT_BRACE));
+        tokenizers.add(new SingleCharTokenizer('[', TokenType.LEFT_BRACKET));
+        tokenizers.add(new SingleCharTokenizer(']', TokenType.RIGHT_BRACKET));
         tokenizers.add(new SingleCharTokenizer(',', TokenType.COMMA));
         tokenizers.add(new SingleCharTokenizer('.', TokenType.DOT));
 
@@ -64,6 +68,10 @@ public class TokenizersProvider {
                 .symbolValues(NumericSystemsParameters.HEX_SYMBOLS)
                 .expectedStart(NumericSystemsParameters.HEX_START)
                 .build());
+
+        tokenizers.add(new DecimalLiteralTokenizer());
+
+        tokenizers.add(new IdentifiersTokenizer());
 
         return tokenizers;
     }

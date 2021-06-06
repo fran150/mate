@@ -15,4 +15,10 @@ if (name == 20) {
 
     int result = name / 10
     result /= 2
+
+    int integer = 12345
+    decimal32 decimal = 0.12345
+    decimal64 otherDecimal = 12345.6789
+
+    @@@
 }

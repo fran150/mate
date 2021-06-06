@@ -36,7 +36,7 @@ public class NonDecimalLiteralTokenizer implements Tokenizer {
                     .pointer(pointer)
                     .build();
 
-            pointer.advance(i);
+            pointer.advance(i - 1);
 
             return Optional.of(token);
         }

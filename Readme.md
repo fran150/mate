@@ -30,16 +30,18 @@ Examples:
 
 ## Decimal literals
 Decimal literals represents decimal values. Explicit decimal values must be specified. No integers.
+No trailing or leading decimal separator allowed.
 
-* Decimal literal: [0-9]*(\.[0-9]+)
 
 Example:
 ```
 123.45      // Valid
 0.1234      // Valid
-.1234       // Valid
-1234        // Invalid
+.1234       // Invalid
+1234.        // Invalid
 ```
+
+Not scientific notation or other complex numbers are supported (for now)
 
 ### String literals
 String literals represents text as series of characters enclosed in double quoutes.
@@ -130,8 +132,8 @@ For example:
 
 ```
 // Array of int32 arrays initialized to a matrix of 4 by 4 with all consecutive numbers
-int32[][] matrix = int32[4]((row, width) => {
-    return int32[4]((column, height) => {
+int32[][] matrix = int32[4]((row, width) -> {
+    return int32[4]((column, height) -> {
         return (row * width) + column
     })
 })

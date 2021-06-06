@@ -1,5 +1,6 @@
 package ar.org.pachisoft.matelang.scanner;
 
+import ar.org.pachisoft.matelang.utils.ReservedWord;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Value;
@@ -16,8 +17,11 @@ public class Token {
     int column;
     int line;
 
+    ReservedWord reservedWord;
+
     @Builder
-    public Token(ParsingPointer pointer, TokenType type, String lexeme, Object literal) {
+    public Token(ParsingPointer pointer, TokenType type, String lexeme, Object literal,
+                 ReservedWord reservedWord) {
         this.type = type;
         this.lexeme = lexeme;
         this.literal = literal;
@@ -25,6 +29,8 @@ public class Token {
         this.file = pointer.getFile();
         this.line = pointer.getLine();
         this.column = pointer.getColumn();
+
+        this.reservedWord = reservedWord;
     }
 
     public String toString() {

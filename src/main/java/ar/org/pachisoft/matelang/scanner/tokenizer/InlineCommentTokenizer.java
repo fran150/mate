@@ -36,7 +36,7 @@ public class InlineCommentTokenizer implements Tokenizer {
                 .pointer(pointer)
                 .build();
 
-        pointer.advance(i);
+        pointer.advance(i - 1);
 
         return token;
     }

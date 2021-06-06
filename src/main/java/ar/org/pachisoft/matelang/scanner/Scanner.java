@@ -1,16 +1,17 @@
 package ar.org.pachisoft.matelang.scanner;
 
+import ar.org.pachisoft.matelang.error.ErrorHandler;
 import ar.org.pachisoft.matelang.scanner.tokenizer.Tokenizer;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class Scanner {
     private static final List<Tokenizer> tokenizers;
+    private final ErrorHandler errorHandler;
 
     static {
         tokenizers = TokenizersProvider.getTokenizers();
@@ -22,12 +23,22 @@ public class Scanner {
                 .source(source)
                 .build();
 
+        boolean unknownToken = false;
         while (!pointer.isAtEnd()) {
             Token token = getToken(pointer);
 
-            // FIXME: Remove when the above function throws exception
-            if (token != null && !token.getType().equals(TokenType.IGNORABLE)) {
-                tokens.add(token);
+            if (token != null) {
+                if (!token.getType().equals(TokenType.IGNORABLE)) {
+                    tokens.add(token);
+                }
+
+                unknownToken = false;
+            } else {
+                if (!unknownToken) {
+                    errorHandler.compilerError(pointer, "Syntax Error.");
+                }
+
+                unknownToken = true;
             }
 
             pointer.advance();
@@ -43,7 +54,6 @@ public class Scanner {
             }
         }
 
-        // FIXME: Should throw syntax error
         return null;
     }
 }

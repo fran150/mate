@@ -1,6 +1,7 @@
 package ar.org.pachisoft.matelang.injection;
 
 import ar.org.pachisoft.matelang.config.Config;
+import ar.org.pachisoft.matelang.error.ErrorHandler;
 import ar.org.pachisoft.matelang.scanner.BuildPathIterator;
 import ar.org.pachisoft.matelang.scanner.Scanner;
 import dagger.Module;
@@ -14,7 +15,7 @@ public class ScannerModule {
     }
 
     @Provides
-    public Scanner provideScanner() {
-        return new Scanner();
+    public Scanner provideScanner(ErrorHandler errorHandler) {
+        return new Scanner(errorHandler);
     }
 }

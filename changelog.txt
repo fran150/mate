@@ -37,3 +37,8 @@ Added binary, octal and hexadecimal literals tokenizers
 03/05/2021
 Added tokenizer for inline and multiline comments (for now we don't ignore them)
 Added tokenizer for slash (division)
+
+05/06/2021
+Added simple tokenizer for decimal literals (integers and decimal)
+Added tokenizer for identifiers and reserved words
+I think the scanner is roughly complete
