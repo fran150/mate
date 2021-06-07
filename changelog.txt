@@ -42,3 +42,6 @@ Added tokenizer for slash (division)
 Added simple tokenizer for decimal literals (integers and decimal)
 Added tokenizer for identifiers and reserved words
 I think the scanner is roughly complete
+
+06/06/2021
+Added some draft classes for parser expressions
