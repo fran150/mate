@@ -11,6 +11,7 @@ Boolean literals represent truth values
 
 * true
 * false
+* else (alias for true)
 
 ## Integer literals
 Integer literals represents integer values
@@ -32,7 +33,6 @@ Examples:
 Decimal literals represents decimal values. Explicit decimal values must be specified. No integers.
 No trailing or leading decimal separator allowed.
 
-
 Example:
 ```
 123.45      // Valid
@@ -43,8 +43,16 @@ Example:
 
 Not scientific notation or other complex numbers are supported (for now)
 
+### Character literals
+Character literals represents single characters and are specified enclosed in single quotes.
+
+Example:
+```
+'A'
+```
+
 ### String literals
-String literals represents text as series of characters enclosed in double quoutes.
+String literals represents text as series of characters enclosed in double quotes.
 
 Example:
 ```
@@ -57,13 +65,15 @@ Example:
 Following is a list of mate's datatypes
 
 ## Boolean
-A boolean value represents Boolean thruth values by using the constants `true` or `false`. The mate type is `bool`
+A boolean value represents Boolean truth values by using the constants `true` or `false`. 
+The mate type is `bool`. The reserved word `default` is an alias of `true`
 
 Examples:
 
 ```
 bool trueValue = true
 bool falseValue = false
+bool trueValue2 = default
 ```
 
 ## Integers
@@ -86,10 +96,10 @@ This types represents integer values:
 ### Decimal
 This types represents decimal values:
 
-* `decimal32` - 32 bits decimal numbers
-* `decimal64` - 64 bits decimal numbers
+* `dec32` - 32 bits decimal numbers
+* `dec64` - 64 bits decimal numbers
 
-## Strings
+## Char and Strings
 Strings are array of chars.
 
 `char` - Represents only one character
@@ -97,15 +107,17 @@ Strings are array of chars.
 
 Examples:
 ```
+char letter = 'A'
 char[] hello = "Hello world 2021"
-string goodbye = "Good bye world 2020"
+string goodbye = ['G', 'o', 'o', 'd', 'b', 'y', 'e']
+string goodbyeWorld = "Goodbye world 2020"
 ```
 
 ## Arrays
-An indexed sequence of an specific type. For an array of size N the possible subindexes of the array goes from 0 to N - 1
-
+An indexed sequence of a specific type. For an array of size N the possible sub-indexes of 
+the array goes from 0 to N - 1
 The generic type of the array is specified with type plus open and close brackets. For example:
-
+The type `string` in an alias of `char[]`
 ```
 int32[] arrayOfInts
 
@@ -113,10 +125,11 @@ int32[] arrayOfInts
 char[] arrayOfChars
 string anotherArrayOfChars
 
-decimal32[] arrayOfDecimals
+dec32[] arrayOfDecimals
 ```
 
-The function `len(<array>)` will return the size of the array. To read an specific value of the array the index must be specified between brackets, for example:
+The function `len(<array>)` will return the size of the array. 
+To read an specific value of the array the index must be specified between brackets, for example:
 
 ```
 // Will return the first element
@@ -126,13 +139,54 @@ arrayOfIntegers[0]
 arrayOfIntegers[len(arrayOfIntegers) - 1]
 ```
 
-Arrays are one dimensional but can contains other arrays effectively creating a multi dimensional type.
+### Array initialization by function
+First the size must be specified by declaring the array type plus the size between brackets. After that, a function that has the following signature must be specified:
+
+`<array type> <function name>(int index, int length)`
+
+This function will be called for each index of the array and must return the value that must be assigned there. The parameter `length` will always contain the length of the array.
+
+Examples:
+```
+int naturalNumbers(int index, int length) {
+    return index + 1
+}
+
+int evenNumbers(int index, int length) {
+    return (index + 1) * 2
+}
+
+...
+
+// Will create an array of the natural numbers from 1 to 10
+int64[] naturals = int64[10](naturalNumbers)
+
+// Will create an array of the even numbers from 1 to 20
+int64[] evens = int64[20](evenNumbers)
+
+// Will create an array of the negative numbers from 1 to 10
+int64[] negatives = int64[10]((index, length) => {
+    return -1 * (index + 1)
+})
+```
+
+### Array initialization by extension
+The value for each element must be specified separated by comas and surrounded by parenthesis.
+There is no need to specify the size as it is implicit.
+
+For example:
+```
+// Creates an array of size 3
+decimal32[] prices = decimal32(0.10, 0.99, 100.32)
+```
+
+Arrays are one dimensional but can contain other arrays effectively creating multi-dimensional types.
 
 For example:
 
 ```
 // Array of int32 arrays initialized to a matrix of 4 by 4 with all consecutive numbers
-int32[][] matrix = int32[4]((row, width) -> {
+int32[][] matrix = int32[4]( {
     return int32[4]((column, height) -> {
         return (row * width) + column
     })
@@ -142,83 +196,17 @@ printf(matrix[0][0]) // Upper left element (0)
 printf(matrix[3][3]) // Lower right element (15)
 ```
 
-### By function
-First the size must be specified by declaring the array type plus the size between brackets. After that, a function that has the following signature must be specified:
-
-`<array type> <function name>(int index, int length)`
-
-This function will be called for each index of the array and must return the value that must be assigned there. The parameter `length` will always contain the length of the array.
-
-Examples:
-```
-package com.fran.Initializer {
-    int naturalNumbers(int index, int length) {
-        return index + 1
-    }
-
-    int evenNumbers(int index, int length) {
-        return (index + 1) * 2
-    }
-}
-
-...
-
-// Will create an array of the natural numbers from 1 to 10
-int[] naturals = int[10](Initializer.naturalNumbers)
-
-// Will create an array of the even numbers from 1 to 20
-int[] evens = int[20](Initializer.evenNumbers)
-
-// Will create an array of the negative numbers from 1 to 10
-int[] negatives = int[10]((idx, lgt) => {
-    return -1 * (idx + 1)
-})
-```
-
-### By extension
-First the size must be specified by declaring the array type plus the size between brackets. After that, the value for each element must be specified separated by comas.
-
-For example:
-```
-decimal32[] prices = decimal32[3](0.10, 0.99, 100.32)
-```
 
 ## Structs
 Structs allows to define a type that is composed by multiple other different types and are grouped into a single structure.
 
 Definition:
 ```
-struct <fully qualified identifier> {
-    <type> <identifier> [, <type> <identifier> ... ]
-}
+<type> <identifier> [, <type> <identifier> ... ]
 ```
 
-A fully qualified name is the name of the namespace followed by a dot and the name of the struct.
-
-Namespaces are used to organize code and avoid naming conflicts of different elements. Namespaces are arranged in a hierachical system similar to directories and each part of the namespace is also separated by dots.
-
-For example:
-```
-struct ar.com.myfoodpage.vegetables.Potato {
-  ...
-}
-
-struct ar.com.myfoodpage.vegetables.Onion {
-  ...
-}
-
-struct ar.com.myfoodpage.fruits.Orange {
-  ...
-}
-
-struct ar.com.myfoodpage.fruits.Apple {
-  ...
-}
-```
-
-In the example above `Potato` and `Onion` are members of the `ar.com.myfoodpage.vegetables` namespace, while `Orange` and `Apple` belong to `ar.com.myfoodpage.fruits`, also and also both namespaces also belong to `ar.com.myfoodpage` namespace.
-
-Initialization is done by specifying the struct type and the values for each field between brackets. Each field must be separated by coma, and it has to be specified as a pair of identifier and value separated by colon.
+Initialization is done by specifying the struct type and the values for each field between brackets. 
+Each field must be separated by coma, and it has to be specified as a pair of identifier and value separated by colon.
 
 For example:
 ```

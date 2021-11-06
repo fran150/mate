@@ -37,7 +37,7 @@ public class IdentifiersTokenizer implements Tokenizer {
             Token token = Token.builder()
                     .lexeme(text)
                     .type(type)
-                    .literal(StringEscapeUtils.unescapeJava(text))
+                    .literal(text)
                     .pointer(pointer)
                     .reservedWord(word)
                     .build();

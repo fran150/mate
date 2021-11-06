@@ -3,6 +3,8 @@ package ar.org.pachisoft.matelang.scanner;
 public enum TokenType {
     IGNORABLE,
 
+    TRUE, FALSE,
+
     // Single-character tokens.
     LEFT_PAREN, RIGHT_PAREN, LEFT_BRACE, RIGHT_BRACE,
     LEFT_BRACKET, RIGHT_BRACKET,

@@ -1,335 +1,285 @@
 Operators:
 ----------
-operation: +, -, *, /, %, ^
+operators: +, -, *, /, %, ^
 comparators: ==, !=, <=, >=, <, >
 assignment: =, +=, -=, *=, /=
-logical: &, |, !
+logical: &&, ||, !
 unary: ++, --
-ternary: ? :
-true false
 
 Types:
 ------
 bool
 int, int16, int32, int64
 uint, uint16, uint32, uint64
+dec32, dec64
 char
 string is alias of char[]
-float32, float64
 
-Consts:
-------
-const <Type> <identifier> = <value>
+Tuple type:
+-----------
+(type1, type2,... typeN)
+
+Function type:
+--------------
+fn[<tuple type>]:<return type>
+
+Array Type:
+-----------
+<type>[]
+
+Literals
+--------
+bool: true false else
+char: 'a'
+string: "abc"
+tuple: (value1, value2,... value N)
+array: [value1, value2,... value N)
+
+Variable creation:
+------------------
+// Mate does not allow nulls so all variables must be explicitly initialized
+let <identifier> = <literal>;
+
+Function implementation:
+------------------------
+def <identifier>[<parameters tuple>] : <return type> {
+    <function implementation>
+}
 
 Arrays:
 -------
-<type>[] <identifier> = <type>[<int size>] {
-    // Must return the value for each index
-    // keyword index returns the current index
-    // keyword length returns the array's length
-}
-
-<type>[] <identifier> = <type>[<int size>](value1, value2... value N)
-
-len(<identifier>) returns length of array
+let <type>[] <identifier> = <type>[<size>] -> fn(int, int):<type>;
+len(<identifier>);
 
 Loops:
 ------
-for (<init>; <condition>; <expr>) {    
+loop {
 }
 
-while (<expr>) {    
-}
-
-break;
-continue;
+break[(condition)];
+continue[(condition)];
 
 Conditional:
 ------------
-if (expr) {
-} else if (expr) {
-} else {
+if (cond) {
 }
 
-Import:
-----
-// Cannot use *
-import <fully qualified struct name>
+if:
+    <Expr 1> { },
+    <Expr 2> { },
+    ...
+    <expr n> { }
+
+// Example:
+if:
+    x is Person { print("Person"); }
+    x is Person? { print("Nobody"); }
+    else { print("No Person") }
 
 Structs:
 --------
-Namespace can be specified with * as comodin on public / private statements
+struct
 
-public for <namespace>
-...
-private for <namespace>
-...
-struct <full qualified identifier> [> <parent>] {
-    Readonly for <namespace>
+[uses:
+    <struct FQN 1>[,
+    <struct FQN 2>,
     ...
-    Writeonly for <namespace>
+    <struct FQN N>]
+    ]
+
+[extends:
+    <extend statements>]
+
+members:
+    [<members statements>]
+
+
+Extend statements:
+------------------
+<struct name> [{
+    <member name> => <new member name>
     ...
-    <type> <identifier>,
-    <type> <identifier>
+}]
+
+Members statements:
+-------------------
+[<scope statement 1>[, ...<scope statement N>] { ]
+    <members definition> | <constants definition>
     ...
-}
+}]
 
-Access is public only for package by default
+Scope statements:
+R+ | R- | W+ | W-
+(allow | deny) (reads | writes) [only] from <namespace>[..., <namespace>]
 
-Enumerable:
-----------
+Member definition:
+<type> <identifier>
 
-// Expr must return an Enumerable
-each(<expr>) {
-    // keyword index returns the current index
-    // keyword value returns the value of the current element
-}
+Constants definition:
+const <type> <identifier> = <literal>
 
-struct Enumerable {
-    Enumerable? next;
-}
 
-Package:
---------
-public for <namespace>
-...
-private for <namespace>
-...
-package <full qualified identifier> {
-    public for <namespace>
-    ...
-    private for <namespace>
-    ...
-    <type> <identifier>(<type> <identifier>, <type> <identifier>) {
-        return <expr>...
-    }
-}
+The child struct will inherit all the members of the extended struct.
+Inherited members will retain its scope.
+In case of naming conflict between members of parent and child structs you can use an alias
+to rename certain properties.
+By default, (no scope specified) read and writes are allowed for all services
+Scope definitions are overriden in the same group (separated by ,) from top to bottom.
+Adding the "only" clause on the scope definition is like adding a deny * for the same operation before.
 
-Interface:
-----------
-public for <namespace>
-...
-private for <namespace>
-...
-interface <full qualified identifier> {
-}
+Constants only accept allow / deny read scopes.
+Constants must be initialized with a literal (it cannot be an expression)
 
-There is no need to implement an interface, when a package is passed
-the compiler will check if it fullfills the interface
+There are no enums in mate, but you can create with a struct with all constant members and
+achieve the same result.
 
 Example:
+<Person.mate>
+struct
 
-interface ar.com.fran.Weapon {
-    void attack()
-}
+uses:
+    mate.example.user.Address
 
-interface ar.com.fran.Armor {
-    void defend()
-}
+members:
+    const MIN_AGE = 16;
 
-package ar.com.fran.Sword {
-    void attack() {
-        print "Slash"
-    }
-}
-
-package ar.com.fran.Flower {
-    void smell() {
-        print "Sniff"
-    }
-}
-
-package ar.com.fran.Shuriken {
-    void attack() {
-        print "Throw"
-    }
-}
-
-package ar.com.fran.NoArmor {
-    void defend() {
-        print "No defense"
-    }
-}
-
-package ar.com.fran.Shield {
-    void defend() {
-        print "Clang"
-    }
-}
-
-// Selectable is which package can set a diferent implementation for the
-// interface. In this case all package from ar.com.fran namespace can select
-// a different implementation
-package ar.com.fran.Ninja
-    import ar.com.fran.Weapon selectable by ar.com.fran.* \ 
-        default ar.com.fran.Sword
-
-    import ar.com.fran.Armor selectable by ar.com.fran.* \
-        default ar.com.fran.NoArmor
-
-    void hit() {
-        Weapon.attack()
+    // Can be read everywhere but written only by services in the mate.example.user folder
+    // Equivalent to:
+    // deny writes from *, allow writes from mate.example.user.*:
+    R- *,
+    W- *,
+    R+ mate.example.user.*
+    {
+        string name;
+        string surname;
+        uint age;
+        Address address;
     }
 
-    void block() {
-        Armor.defend()
+<User.mate>
+struct
+
+uses
+    mate.example.user.Person
+
+extends:
+    Person
+
+members:
+    // Can be read everywhere
+    string userAlias
+
+    // Can only be read by services in the mate.example.user folder, and written only by the
+    // mate.examples.user.SignInService
+    W- *,
+    R- *,
+    R+ mate.examples.user.*,
+    W+ mate.example.user.SignInService
+    {
+        string password
     }
-}
-
-package ar.com.fran.Main {
-    import ar.com.fran.Ninja {
-        Weapon: Sword
-    } as Ninja1
-
-    import ar.com.fran.Ninja {
-        Weapon: Shuriken
-    } as Ninja2
-
-    void run() {
-        Ninja1.hit() // Slash
-        Ninja2.hit() // Throw
-    }
-}
 
 Is
 --
-<identifier> is <Struct type>
+// Returns true if the identifier is of the specified type or is part of the hierarchy
+// of the identifier.
+<identifier> is <type>
 
-returns if the struct type is part of the hierarchy of the identifier.
-
-Empty Value:
-------------
-
+Empty Type:
+-----------
 Appending an struct type name with ? is an empty type
-An empty type is always the parent from the given type but has no properties
-It can be used on types that can have no value, to actually get the value 
-requires casting.
+The empty type for a given struct will always be it's parent on the inheritance chain.
+An empty type has no members.
+It can be used on types that can have no value, to actually get the value requires casting.
+The empty type does not require initialization
 
 Example:
 
-struct People {
-    string name;
-    int age;
-}
+def main : void {
+    // People inherits from People? so this is valid
+    People? me
 
-// People inherits from People? so this is valid
-People? me;
+    me is People? // true
+    me is People // false
 
-me is People? // true
-me is People // false
+    me = People {
+        name: "Fran",
+        age: 38
+    }
 
-me = People {
-    name: "Fran",
-    age: 38
-}
+    me is People? // true
+    me is People // true
 
-me is People? // true
-me is People // true
+    // Exception because People? doesn't have those members
+    me.name = "Pat"
+    me.age = 39
 
-// Exception because People? doesnt have those fields
-me.name = "Pat"
-me.age = 39
+    // Works
+    if (me is Person) {
+        people person = me as Person
+        person.name = "Pat"
+        person.age = 39
+    }
 
-// Works
-if (me is Person) {
-    People person = me as Person
-    person.name = "Pat"
-    person.age = 39
-}
-
-// Shortcut to the above
-if (me is Person into person) {
-    person.name = "Pat"
-    person.age = 39
-}
-
-Lambda
-------
-
-package ar.fran150.Iterator {
-    void each(float32[] list, lambda bool fn(float32, int), \
-        lambda void finish()) {
-        for (int i = 0; i < len(list); i++) {
-            if (!fn(list[i], i)) {
-                break
-            }
-        }
-
-        finish()
+    // Shortcut to the above
+    if (me is Person into person) {
+        person.name = "Pat"
+        person.age = 39
     }
 }
 
-...
-...
-    float64 sum = 0
-
-    Iterator.each(list, (value, index) => {
-        if (value > 200) {
-            return false
-        }
-
-        if (index > 100000) {
-            return false
-        }
-
-        sum += value
-    }, () => {
-        print "bye"
-    })
-
-Templates
+Services:
 ---------
+<use clauses>
 
-// Parameters must be an AST type
-template ar.com.fran.List(Type type)
+-------
+<runnable.msvc>
+void run()
 
-file NodeOf<type> {
-    struct NodeOf<type> > Enumerable {
-        <type> value
+<Runner.msvc>
+uses:
+    Runnable
+    Process1
+    Process2
+
+contracts:
+    S- *,
+    S+ mate.example.* {
+        Runnable runnable1 | Process1
+        Runnable runnable2 | Process2
     }
-}
 
-file ListOf<type> {
-    package ar.fran150.ListOf<type> {
-        Enumerable? init(<type>[] values) {
-            Enumerable? root = Enumerable? {}
-            Enumerable? prev = Enumerable? {}
+functions:
+    fn : void run {
+        runnable1.run()
+        runnable2.run()
+    }
 
-            for (int i = 0; i < len(values); i++) {
-                NodeOf<TYPE> node = {
-                    value: values[i],
-                    next: Enumerable? {                        
-                    }
-                }
+<some.msvc>
+uses:
+    Runner as Main,
+    Runner as Secondary,
+    ProcessA,
+    ProcessB
 
-                if (!(root is Enumerable)) {
-                    root = node
-                }
+selects:
+    Main {
+        runnable1: ProcessA,
+        runnable2: ProcessB
+    }
 
-                if (prev is Enumerable) {
-                    prev.next = node
-                }
+functions:
+    fn : void main = {
+        Main.run()
+        Secondary.run()
 
-                prev = node
-            }
+        Logger.log("finished")
+    }
 
-            return root
+    X- *,
+    X+ mate.example.* {
+        fn : void inverse = {
+            secondary.run();
+            main.run();
         }
     }
-}
-
-package ar.com.fran.Test {
-    import ar.com.fran.List<int> as ListOfInt
-    import ar.com.fran.List<string> as ListOfString
-
-    void run() {
-        int[] values = int[5] {
-            return index
-        }
-
-        String[] vocals = String[5]("a","e","i","o","u")
-
-        Enumerable? integers = ListOfInt.init(values)
-        Enumerable? letters = ListOfString.init(vocals)
-    }
-}

@@ -2,6 +2,7 @@ package ar.org.pachisoft.matelang.error;
 
 import ar.org.pachisoft.matelang.config.Config;
 import ar.org.pachisoft.matelang.scanner.ParsingPointer;
+import ar.org.pachisoft.matelang.scanner.Token;
 import ar.org.pachisoft.matelang.utils.ConsoleColors;
 import ar.org.pachisoft.matelang.utils.ConsoleUtils;
 import lombok.AllArgsConstructor;
@@ -9,6 +10,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * Handles error presentation for both compiler and runtime errors.
@@ -29,6 +31,19 @@ public class ErrorHandler {
      */
     public void compilerError(ParsingPointer pointer, String message) {
         System.err.println(getErrorMessage(pointer, message));
+    }
+
+    public void parserError(Token token, String message) {
+        try {
+            ParsingPointer pointer = token.getPointer();
+            compilerError(pointer, message);
+        } catch (IOException e) {
+            String error = String.format("Parser error on line number %d " +
+                    ", column %d of file %s. The parser was unable to open the file " +
+                    " to show the error", token.getLine(), token.getColumn(),
+                    token.getFile().getName());
+            System.err.println(error);
+        }
     }
 
     private void appendMessageHeader(StringBuilder sb, ParsingPointer pointer) {
