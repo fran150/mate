@@ -1,0 +1,9 @@
+struct ar.com.mate.lawnmower.world.MowerData;
+
+uses:
+    ar.com.mate.lawnmower.engine.Commands;
+
+members:
+    position:Position;
+    commands:Commands[];
+

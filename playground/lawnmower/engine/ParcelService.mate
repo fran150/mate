@@ -1,0 +1,51 @@
+service ar.com.mate.lawnmower.engine.ParcelService;
+
+uses:
+    ar.com.mate.lawnmower.engine.Parcel;
+    ar.com.mate.lawnmower.engine.AreaStatus;
+
+functions:
+    initParcel: fn(Size, Mower[]):Parcel::{
+        params => size, mowers;
+        return Parcel::{
+            size: size,
+            mowers: mowers,
+            areas: AreaStatus[width * height]::{
+                params => index, size;
+                var pos = getPosition(size, index);
+
+                return AreaStatus::{
+                    position: pos,
+                    occupied: isOccupied(pos),
+                    mowed: false
+                },
+
+            }
+        }
+    }
+
+    X- * {
+        isOccupied: fn(Position, Mower[]):bool::{
+            params => pos, mowers;
+
+            let i = int::0;
+            loop {
+                if (i < len(mowers)) { return false; }
+                if (mover[i].x == pos.x && mover[i].y == pos.y) {
+                    return true;
+                }
+                i++;
+            }
+        }
+
+        getPosition: fn(Size, int):Position::{
+            params => parcelSize, index;
+            let i = int::index + 1;
+            return (i / parcelSize.width, i % parcelSize.height);
+        }
+
+        getIndex: fn(int, int, int, int):int::{
+            params => width, height, x, y;
+            return (y * width) + (x % height);
+        }
+    }

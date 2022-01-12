@@ -1,0 +1,5 @@
+struct ar.com.mate.lawnmower.world.Size
+
+members:
+    width:uint;
+    height:uint;

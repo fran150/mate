@@ -1,0 +1,15 @@
+enum ar.com.mate.lawnmower.world.Commands
+
+type char;
+
+members:
+    NORTH = 'N';
+    EAST = 'E';
+    SOUTH = 'S';
+    WEST = 'W';
+
+
+Ask user input
+Initialize Parcel
+Move mowers until no movements are made
+

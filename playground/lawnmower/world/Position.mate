@@ -1,0 +1,5 @@
+struct ar.com.mate.lawnmower.Position;
+
+members:
+    x:uint;
+    y:unit;

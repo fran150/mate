@@ -1,0 +1,9 @@
+struct ar.com.mate.lawnmower.world.AreaStatus
+
+uses:
+    ar.com.mate.lawnmower.world.Position
+
+members:
+    position:Position;
+    occupied:bool;
+    mowed:bool;

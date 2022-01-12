@@ -5,6 +5,8 @@ comparators: ==, !=, <=, >=, <, >
 assignment: =, +=, -=, *=, /=
 logical: &&, ||, !
 unary: ++, --
+channel: <-, ->
+tuple deconstruct: =>
 
 Types:
 ------
@@ -21,7 +23,11 @@ Tuple type:
 
 Function type:
 --------------
-fn[<tuple type>]:<return type>
+fn<param tuple>:<return type>
+
+Channel type:
+-------------
+chan(<type>)
 
 Array Type:
 -----------
@@ -34,47 +40,67 @@ char: 'a'
 string: "abc"
 tuple: (value1, value2,... value N)
 array: [value1, value2,... value N)
-
-Variable creation:
-------------------
-// Mate does not allow nulls so all variables must be explicitly initialized
-let <identifier> = <literal>;
-
-Function implementation:
-------------------------
-def <identifier>[<parameters tuple>] : <return type> {
-    <function implementation>
+struct: {
+    <identifier1>: <value>,
+    <identifier2>: <value>,
+    ...
+    <identifierN>: <value>
+}
+function: [<tuple identifier>] {
+    definition
 }
 
-Arrays:
--------
-let <type>[] <identifier> = <type>[<size>] -> fn(int, int):<type>;
-len(<identifier>);
+Variable definition and initialization:
+---------------------------------------
+// Mate does not allow nulls so all variables must be explicitly initialized
+let <identifier> = <type>::<literal>
 
 Loops:
 ------
 loop {
 }
 
-break[(condition)];
-continue[(condition)];
+break;
+continue;
 
 Conditional:
 ------------
 if (cond) {
 }
 
-if:
-    <Expr 1> { },
-    <Expr 2> { },
+unless (cond) {
+}
+
+if {
+    <Expr 1> { }
+    <Expr 2> { }
     ...
     <expr n> { }
+}
 
 // Example:
-if:
+if {
     x is Person { print("Person"); }
     x is Person? { print("Nobody"); }
     else { print("No Person") }
+}
+
+var sum = fn(int, int):int({
+    params => x, y;
+    return x + y;
+})
+
+var timer = fn(fn(int, int):int, int)({
+    params => runnable, count;
+    var i = int::0;
+    var start = int::now();
+    loop {
+        unless (i++ < count) { break };
+        runnable(i, i + 1);
+    }
+    var end = int::now();
+    return end - start;
+})
 
 Structs:
 --------
@@ -150,10 +176,10 @@ members:
     W- *,
     R+ mate.example.user.*
     {
-        string name;
-        string surname;
-        uint age;
-        Address address;
+        name:string;
+        surname:string;
+        age:uint;
+        address:Address;
     }
 
 <User.mate>
@@ -250,7 +276,7 @@ contracts:
     }
 
 functions:
-    fn : void run {
+    def run : void {
         runnable1.run()
         runnable2.run()
     }
@@ -269,7 +295,7 @@ selects:
     }
 
 functions:
-    fn : void main = {
+    def main : void = {
         Main.run()
         Secondary.run()
 

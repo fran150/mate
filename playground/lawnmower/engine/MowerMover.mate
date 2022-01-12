@@ -1,0 +1,12 @@
+service ar.com.mate.lawnmower.engine.MowerMover;
+
+uses:
+    ar.com.mate.lawnmower.world.Parcel;
+    ar.com.mate.lawnmower.world.Mower;
+
+functions:
+    move: fn(Parcel, Mower):bool::{
+        params => parcel, mower;
+
+
+    }

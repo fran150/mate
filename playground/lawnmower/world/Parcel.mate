@@ -1,0 +1,6 @@
+struct ar.com.mate.lawnmower.world.Parcel
+
+members:
+    size:Size;
+    areas:AreaStatus[];
+    mowers:Mower[];

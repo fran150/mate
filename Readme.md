@@ -60,6 +60,24 @@ Example:
 ```
 (Complete with a list of escape caracters?)
 
+### Tuple Literals
+Tuple is a sequence of values that can have different types. They are enclosed in parentheses
+and separated by commas.
+
+Example:
+```
+("Fran", 40, 1982, 1.83)
+```
+
+### Array Literals
+Arrays are a sequence of values of the same type. They are enclosed in brackets and separated
+by commas.
+
+Example:
+```
+[2, 4, 6, 8, 10]
+```
+
 # Data Types
 
 Following is a list of mate's datatypes
@@ -71,13 +89,13 @@ The mate type is `bool`. The reserved word `default` is an alias of `true`
 Examples:
 
 ```
-bool trueValue = true
-bool falseValue = false
-bool trueValue2 = default
+let trueValue:bool = true;
+let falseValue:bool = false;
+let trueValue2:bool = else;
 ```
 
 ## Integers
-This types represents integer values:
+These types represent integer values:
 
 ### Unsigned integers
 * `uint8` - Unsigned 8-it integer (0 to 65535)
@@ -94,7 +112,7 @@ This types represents integer values:
 * `int` - Signed platform dependent integer (32 or 64 bit depending on platform type)
 
 ### Decimal
-This types represents decimal values:
+These types represent decimal values:
 
 * `dec32` - 32 bits decimal numbers
 * `dec64` - 64 bits decimal numbers
@@ -107,10 +125,35 @@ Strings are array of chars.
 
 Examples:
 ```
-char letter = 'A'
-char[] hello = "Hello world 2021"
-string goodbye = ['G', 'o', 'o', 'd', 'b', 'y', 'e']
-string goodbyeWorld = "Goodbye world 2020"
+let letter:char = 'A'
+let hello:char[] = "Hello world 2021"
+let goodbye:string = ['G', 'o', 'o', 'd', 'b', 'y', 'e']
+let goodbyeWorld:string = "Goodbye world 2020"
+```
+
+## Tuples
+A sequence of different types. For a tuple of size N the possible sub-indexes of the arrays
+goes from 0 to N - 1
+The tuple is specified stating the type list enclosed in parentheses and separated by comma.
+
+Example:
+```
+(int, dec32, string)
+```
+
+### Tuple deconstruction
+The operator `=>` can be used to deconstruct the tuple, this means assigning each value to a different
+variable.
+
+Example:
+```
+let data:(string, int) = ("Fran", 40);
+data => name:string, age:int;
+
+print(name);  // Fran
+print(age);   // 40
+print(data[0]);  // Fran
+print(data[1]);  // 40
 ```
 
 ## Arrays
@@ -119,17 +162,17 @@ the array goes from 0 to N - 1
 The generic type of the array is specified with type plus open and close brackets. For example:
 The type `string` in an alias of `char[]`
 ```
-int32[] arrayOfInts
+let arrayOfInts:int32[]
 
 // These expressions are equivalent
-char[] arrayOfChars
-string anotherArrayOfChars
+let arrayOfChars:char[]
+let anotherArrayOfChars:string
 
-dec32[] arrayOfDecimals
+let arrayOfDecimals:dec32[]
 ```
 
 The function `len(<array>)` will return the size of the array. 
-To read an specific value of the array the index must be specified between brackets, for example:
+To read a specific value of the array the index must be specified between brackets, for example:
 
 ```
 // Will return the first element
